@@ -14,8 +14,12 @@ export class AgendaService extends Agenda {}
     {
       provide: AgendaService,
       useFactory: async (options) => {
+        const lazyLoad = options.lazyLoad === undefined ? false : options.lazyLoad;
+        delete options.lazyLoad;
         const agenda = new Agenda(options);
-        await agenda.start();
+        if (!lazyLoad) {
+          await agenda.start();
+        }
         return agenda;
       },
       inject: [AGENDA_MODULE_OPTIONS],
